@@ -1,5 +1,9 @@
 package com.example.rus.testingcleanarch.presentation.View.activity.Main;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private WeatherAPI.ApiInterface api;
     private DBManager dbManager;
     private MainPresenter mainPresenter;
+    private IntentFilter intentFilter;
+    private BroadcastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +51,29 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
         mainPresenter = new MainPresenter(dbManager);
         mainPresenter.attachView(this);
-        mainPresenter.setUpAdapter(adapter);
+        mainPresenter.setUpAdapter(adapter, getApplicationContext());
 
+
+        intentFilter = new IntentFilter("myservice");
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getStringExtra("result").equals("response")) {
+                    mainPresenter.updateAdapter(adapter);
+                }
+            }
+        };
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(broadcastReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(broadcastReceiver);
+    }
 }

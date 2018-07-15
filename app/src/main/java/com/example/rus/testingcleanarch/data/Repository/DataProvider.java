@@ -1,6 +1,8 @@
 package com.example.rus.testingcleanarch.data.Repository;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.example.rus.testingcleanarch.data.DataBase.DBManager;
@@ -22,11 +24,12 @@ public class DataProvider {
     private List<com.example.rus.testingcleanarch.data.Entity.WeatherDay> weatherDayListEntity;
     DBManager dbManager;
 
-    public List<WeatherDay> getWeatherDayList(DBManager dbManager) {
+    public List<WeatherDay> getWeatherDayList(DBManager dbManager, final Context context) {
         List<WeatherDay> weatherDayList = new ArrayList<>();
         WeatherDayMapper mapper = new WeatherDayMapper();
         this.dbManager = dbManager;
         weatherDayListEntity = new ArrayList<>();
+        weatherDayListEntity = DataProvider.this.dbManager.getWeatherDaysList();
 
         WeatherAPI.ApiInterface api = WeatherAPI.getClient().create(WeatherAPI.ApiInterface.class);
         Call<Weather5> weather5Call = api.getForecast(WeatherAPI.CITY_ID, "metric",WeatherAPI.KEY);
@@ -46,21 +49,31 @@ public class DataProvider {
                 Log.v("TAG", "Added in DB");
 
 
-               /* adapter.update(weatherDayList);
-                adapter.notifyDataSetChanged();*/
+                //testing
+                Intent broadcastIntent = new Intent("myservice");
+                broadcastIntent.putExtra("result","response");
+                context.sendBroadcast(broadcastIntent);
 
             }
 
             @Override
             public void onFailure(Call<Weather5> call, Throwable t) {
                 Log.v("TAG", "Failed");
-                weatherDayListEntity = DataProvider.this.dbManager.getWeatherDaysList();
             }
         });
         Log.v("TAG", "Test");
 
-        weatherDayListEntity = DataProvider.this.dbManager.getWeatherDaysList();
+        weatherDayList = mapper.transform(weatherDayListEntity);
+        Log.v("TAG", "Weather day list" + weatherDayList.size());
+        return weatherDayList;
+    }
 
+    public List<WeatherDay> getWeatherDayList(DBManager dbManager) {
+        List<WeatherDay> weatherDayList = new ArrayList<>();
+        WeatherDayMapper mapper = new WeatherDayMapper();
+        this.dbManager = dbManager;
+        weatherDayListEntity = new ArrayList<>();
+        weatherDayListEntity = DataProvider.this.dbManager.getWeatherDaysList();
         weatherDayList = mapper.transform(weatherDayListEntity);
         Log.v("TAG", "Weather day list" + weatherDayList.size());
         return weatherDayList;

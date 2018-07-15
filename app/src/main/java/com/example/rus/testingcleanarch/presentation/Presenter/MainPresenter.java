@@ -1,5 +1,7 @@
 package com.example.rus.testingcleanarch.presentation.Presenter;
 
+import android.content.Context;
+
 import com.example.rus.testingcleanarch.data.DataBase.DBManager;
 import com.example.rus.testingcleanarch.domain.Interactor.GetWeatherDayList;
 import com.example.rus.testingcleanarch.presentation.Mapper.WeatherDayModelDataMapper;
@@ -24,7 +26,13 @@ public class MainPresenter {
     }
 
 
-    public void setUpAdapter(MyAdapter adapter) {
+    public void setUpAdapter(MyAdapter adapter, Context context) {
+        List<WeatherDayModel> weatherDayModelList = weatherDayModelDataMapper.transform(getWeatherDayList.getWeatherDayList(dbManager, context));
+        adapter.update(weatherDayModelList);
+        adapter.notifyDataSetChanged();
+    }
+
+    public void updateAdapter(MyAdapter adapter) {
         List<WeatherDayModel> weatherDayModelList = weatherDayModelDataMapper.transform(getWeatherDayList.getWeatherDayList(dbManager));
         adapter.update(weatherDayModelList);
         adapter.notifyDataSetChanged();
