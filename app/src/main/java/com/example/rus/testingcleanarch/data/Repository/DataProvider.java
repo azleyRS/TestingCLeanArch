@@ -48,7 +48,7 @@ public class DataProvider {
 
                /* adapter.update(weatherDayList);
                 adapter.notifyDataSetChanged();*/
-               
+
             }
 
             @Override

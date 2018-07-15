@@ -47,41 +47,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
         mainPresenter.attachView(this);
         mainPresenter.setUpAdapter(adapter);
 
-        makeShit();
     }
 
-    private void makeShit() {
-        /*api = WeatherAPI.getClient().create(WeatherAPI.ApiInterface.class);
-
-        //delete later
-        dbManager = new DBManager(getBaseContext());
-
-        Call<Weather5> weather5Call = api.getForecast(WeatherAPI.CITY_ID, "metric",WeatherAPI.KEY);
-        weather5Call.enqueue(new Callback<Weather5>() {
-            @Override
-            public void onResponse(Call<Weather5> call, Response<Weather5> response) {
-                Weather5 weather5 = response.body();
-                List<WeatherDay> weatherDayList = new ArrayList<>();
-                for (WeatherDay weatherDay : weather5.getItems()){
-                    if (weatherDay.getDateCalendar().get(Calendar.HOUR_OF_DAY) == 15){
-                        weatherDayList.add(weatherDay);
-                    }
-                }
-                //dbManager = new DBManager(getBaseContext());
-                dbManager.addWeatherList(weatherDayList);
-
-                adapter.update(dbManager.getWeatherDaysList());
-                adapter.notifyDataSetChanged();
-                *//*Intent broadcastIntent = new Intent("myservice");
-                broadcastIntent.putExtra("result","response");
-                sendBroadcast(broadcastIntent);*//*
-            }
-
-            @Override
-            public void onFailure(Call<Weather5> call, Throwable t) {
-                adapter.update(dbManager.getWeatherDaysList());
-                adapter.notifyDataSetChanged();
-            }
-        });*/
-    }
 }
